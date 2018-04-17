@@ -1,17 +1,17 @@
-﻿public class OnCollisionEnterAbilityEvent : AbilityEventBase
-{
-    ICombatUnit _parentUnit;
+﻿using System.Collections.Generic;
 
+public class OnCollisionEnterAbilityEvent : AbilityEventBase
+{
     AbilityBase _bindedAbility;
 
-    AbilityTargetCollectorBehaviour _targetCollectorBehaviour;
+    InteractableCollider _targetInteractableCollider;
 
-    public OnCollisionEnterAbilityEvent(ICombatUnit parentUnit, AbilityBase bindedAbility)
+    public OnCollisionEnterAbilityEvent(InteractableCollider targetInteractableCollider, AbilityBase bindedAbility, AbilityActionBase bindedAction)
+        : base(bindedAction)
     {
-        _parentUnit = parentUnit;
-        _bindedAbility = bindedAbility;
+        _targetInteractableCollider = targetInteractableCollider;
 
-        _targetCollectorBehaviour = _bindedAbility.GetBehaviour<AbilityTargetCollectorBehaviour>();
+        _bindedAbility = bindedAbility;
 
         Bind();
     }
@@ -19,15 +19,25 @@
     protected override void Bind()
     {
         _bindedAbility.OnAbilityExecuted += OnAbilityExecuted;
-        _targetCollectorBehaviour.OnTargetEntered += OnTargetEntered;
+        _targetInteractableCollider.OnTargetEntered += OnTargetEntered;
+
+        CheckInitialTriggger();
     }
 
     protected override void Unbind()
     {
         _bindedAbility.OnAbilityExecuted -= OnAbilityExecuted;
-        _targetCollectorBehaviour.OnTargetEntered -= OnTargetEntered;
+        _targetInteractableCollider.OnTargetEntered -= OnTargetEntered;
 
         TriggerActionList.Clear();
+    }
+
+    void CheckInitialTriggger()
+    {
+        List<ICombatUnit> targets = _targetInteractableCollider.Targets;
+
+        foreach (ICombatUnit cUnit in targets)
+            OnTargetEntered(cUnit);
     }
 
     private void OnTargetEntered(ICombatUnit unit)

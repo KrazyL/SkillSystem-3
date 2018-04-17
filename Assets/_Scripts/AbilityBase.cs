@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
 using System;
-using System.Linq;
 
 public class AbilityBase
 {
     public ICombatUnit Caster;
-
-    public List<AbilityBehaviourBase> Behaviours { get; set; }
 
     public List<AbilityEventBase> Events { get; set; }
 
@@ -30,7 +27,6 @@ public class AbilityBase
 
     public AbilityBase()
     {
-        Behaviours = new List<AbilityBehaviourBase>();
         Events = new List<AbilityEventBase>();
         Modifiers = new List<AbilityModifierBase>();
     }
@@ -39,10 +35,4 @@ public class AbilityBase
     {
         FireOnCastStarted();
     }
-
-    public TBehaviour GetBehaviour<TBehaviour>()
-        where TBehaviour : AbilityBehaviourBase
-        {
-            return (TBehaviour)Behaviours.SingleOrDefault(val => val is TBehaviour);
-        }
 }

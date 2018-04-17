@@ -10,6 +10,8 @@ public abstract class AbilityActionBase
 
     public ICombatUnit Caster { get; private set; }
 
+    public AbilityActionBase ParentAction { get; protected set; }
+
     #region Events
     public Action<AbilityActionBase> OnActionStarted;
 
@@ -37,8 +39,10 @@ public abstract class AbilityActionBase
         Conditions = new List<EventConditionBase>();
     }
 
-    public void CheckAndInvoke()
+    public void CheckAndInvoke(AbilityActionBase parentAction)
     {
+        ParentAction = parentAction;
+
         SetTargetUnits();
 
         foreach (ICombatUnit target in TargetUnits)

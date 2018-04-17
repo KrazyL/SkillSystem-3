@@ -14,8 +14,6 @@ public class Unit : MonoBehaviour, ICombatUnit,
     public List<CombatUnitStateDecoratorBase> StateDecorators { get; private set; }
     public List<CombatUnitFlagBase> Flags { get; private set; }
 
-    AbilityBase _dotAbility;
-
     public Action<float> OnSpentStamina { get; set; }
 
     public Action<DamageInfo> OnTookDamage { get; set; }
@@ -38,9 +36,16 @@ public class Unit : MonoBehaviour, ICombatUnit,
 
     private void Awake()
     {
+        InitInteractables();
+
         StateDecorators = new List<CombatUnitStateDecoratorBase>();
 
         Flags = GetComponents<CombatUnitFlagBase>().ToList();
+    }
+
+    protected virtual void InitInteractables()
+    {
+
     }
 
     #region IHealthOwner
@@ -50,10 +55,10 @@ public class Unit : MonoBehaviour, ICombatUnit,
 
         damageInfo.Damage = Health.AddHealth(damageInfo.Damage);
 
-        Debug.Log("<color=red>" + gameObject.name + " Took Damage: " + damageInfo.Damage + " Cur Health: " + Health.CurValue + "</color>");
-
         if (damageInfo.Damage == 0)
             return damageInfo;
+
+        Debug.Log("<color=red>" + gameObject.name + " Took Damage: " + damageInfo.Damage + " Cur Health: " + Health.CurValue + "</color>");
 
         FireOnTookDamage(damageInfo);
 
@@ -136,45 +141,4 @@ public class Unit : MonoBehaviour, ICombatUnit,
     }
     #endregion
 
-    #region Ability Define Region
-
-
-    void InitDOTAbility()
-    {
-        _dotAbility = new AbilityBase
-        {
-            Caster = this
-        };
-
-        AbilityDamageAction dealDamageAction = new AbilityDamageAction("DealDamage", this, new DamageInfo(DamageType.Physical, -10))
-        {
-            TargetSelector = new AbilityTargetSelector(this)
-        };
-
-        dealDamageAction.TargetSelector.SetTargetTypes(TargettedActionTargetType.Monster);
-
-        AbilityThinkerModifier dotThinker = new AbilityThinkerModifier("DOT Thinker", this, 3, 0.5f);
-
-        OnThinkModifierEvent onThinkModifierEvent = new OnThinkModifierEvent(dotThinker);
-
-        onThinkModifierEvent.TriggerActionList.Add(dealDamageAction);
-
-        _dotAbility.Modifiers.Add(dotThinker);
-
-        AbilityCreateThinkerAction createDOTThinkerAction = new AbilityCreateThinkerAction("DOT Thinker", this, dotThinker);
-
-        OnCastStartedAbilityEvent onCastStartedAbilityEvent = new OnCastStartedAbilityEvent(_dotAbility);
-
-        onCastStartedAbilityEvent.TriggerActionList.Add(createDOTThinkerAction);
-
-        _dotAbility.Events.Add(onCastStartedAbilityEvent);
-    }
-
-    public void CastDOTAbility()
-    {
-        InitDOTAbility();
-
-        _dotAbility.Cast();
-    }
-    #endregion
 }

@@ -2,7 +2,8 @@
 {
     public AbilityBase Parentability;
 
-    public OnCastStartedAbilityEvent(AbilityBase parentAbility)
+    public OnCastStartedAbilityEvent(AbilityBase parentAbility, AbilityActionBase bindedAction)
+        : base(bindedAction)
     {
         Parentability = parentAbility;
 
@@ -22,9 +23,9 @@
 
     private void OnCastStarted()
     {
-        Unbind();
-
         Trigger();
+
+        Unbind();
     }
 
 }

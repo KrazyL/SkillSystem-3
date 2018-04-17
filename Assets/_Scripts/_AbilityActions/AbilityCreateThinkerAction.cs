@@ -12,7 +12,7 @@
     {
         Thinker.CreateModifier();
 
-        Thinker.CheckAndInvoke();
+        Thinker.CheckAndInvoke(ParentAction);
 
         FireOnActionEnded();
     }

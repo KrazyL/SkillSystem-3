@@ -2,7 +2,8 @@
 {
     IHealthOwnerCombatUnit _parentUnit;
 
-    public OnTakeDamageAbilityEvent(IHealthOwnerCombatUnit parentUnit)
+    public OnTakeDamageAbilityEvent(IHealthOwnerCombatUnit parentUnit, AbilityActionBase bindedAction)
+        : base(bindedAction)
     {
         _parentUnit = parentUnit;
 

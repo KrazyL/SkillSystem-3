@@ -2,7 +2,8 @@
 {
     IDamageDealerCombatUnit _parentUnit;
 
-    public OnDealtDamageAbilityEvent(IDamageDealerCombatUnit parentUnit)
+    public OnDealtDamageAbilityEvent(IDamageDealerCombatUnit parentUnit, AbilityActionBase bindedAction)
+        : base(bindedAction)
     {
         _parentUnit = parentUnit;
 

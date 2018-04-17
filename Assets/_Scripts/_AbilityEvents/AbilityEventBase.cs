@@ -5,8 +5,12 @@ public abstract class AbilityEventBase
 {
     public List<AbilityActionBase> TriggerActionList;
 
-    public AbilityEventBase()
+    AbilityActionBase _bindedAction;
+
+    public AbilityEventBase(AbilityActionBase bindedAction)
     {
+        _bindedAction = bindedAction;
+
         TriggerActionList = new List<AbilityActionBase>();
     }
 
@@ -15,6 +19,6 @@ public abstract class AbilityEventBase
 
     protected void Trigger()
     {
-        TriggerActionList.ForEach(val => val.CheckAndInvoke());
+        TriggerActionList.ForEach(val => val.CheckAndInvoke(_bindedAction));
     }
 }

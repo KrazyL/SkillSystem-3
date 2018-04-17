@@ -24,6 +24,8 @@ public abstract class CombatUnitStateDecoratorBase : IStateDecorator
     public CombatUnitStateDecoratorBase(ICombatUnit parentUnit)
     {
         ParentUnit = parentUnit;
+
+        Conditions = new List<StateDecoratorConditionBase>();
     }
 
     public bool CanDecorate()

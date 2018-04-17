@@ -2,7 +2,8 @@
 {
     AbilityThinkerModifier _parentModifier;
 
-    public OnThinkModifierEvent(AbilityThinkerModifier parentModifier)
+    public OnThinkModifierEvent(AbilityThinkerModifier parentModifier, AbilityActionBase bindedAction)
+        : base(bindedAction)
     {
         _parentModifier = parentModifier;
 
