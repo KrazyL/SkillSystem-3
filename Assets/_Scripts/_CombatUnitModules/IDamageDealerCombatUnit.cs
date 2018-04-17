@@ -2,9 +2,9 @@
 
 public interface IDamageDealerCombatUnit
 {
-    Action<DamageInfo> OnDealtDamage { get; set; }
-    Action OnKilledEnemy { get; set; }
+    Action<DamageInfo, ICombatUnit> OnDealtDamage { get; set; }
+    Action<ICombatUnit> OnKilledEnemy { get; set; }
 
-    DamageInfo DealDamage(DamageInfo damageInfo);
-    void DealtDamage(DamageInfo damageInfo);
+    DamageInfo DealDamage(DamageInfo damageInfo, ICombatUnit other);
+    void DealtDamage(DamageInfo damageInfo, ICombatUnit other);
 }

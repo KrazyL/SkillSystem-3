@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System;
 
 public abstract class AbilityEventBase
 {
@@ -7,7 +6,9 @@ public abstract class AbilityEventBase
 
     AbilityActionBase _bindedAction;
 
-    public AbilityEventBase(AbilityActionBase bindedAction)
+    protected bool _triggerOnce;
+
+    public AbilityEventBase(AbilityActionBase bindedAction, bool triggerOnce = true)
     {
         _bindedAction = bindedAction;
 
@@ -19,6 +20,6 @@ public abstract class AbilityEventBase
 
     protected void Trigger()
     {
-        TriggerActionList.ForEach(val => val.CheckAndInvoke(_bindedAction));
+        TriggerActionList.ForEach(val => val.CheckAndInvoke(_bindedAction, this));
     }
 }

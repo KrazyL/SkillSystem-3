@@ -1,14 +1,17 @@
-﻿public class OnTakeDamageAbilityEvent : AbilityEventBase
+﻿public class OnTakeDamageAbilityEvent : AbilityEventBase, ICombatUnitTriggeredEvent
 {
     IHealthOwnerCombatUnit _parentUnit;
 
-    public OnTakeDamageAbilityEvent(IHealthOwnerCombatUnit parentUnit, AbilityActionBase bindedAction)
-        : base(bindedAction)
+    public ICombatUnit Other { get; private set; }
+
+    public OnTakeDamageAbilityEvent(IHealthOwnerCombatUnit parentUnit, AbilityActionBase bindedAction, bool triggerOnce)
+        : base(bindedAction, triggerOnce)
     {
         _parentUnit = parentUnit;
 
         Bind();
     }
+
 
     protected override void Bind()
     {
@@ -22,11 +25,13 @@
         TriggerActionList.Clear();
     }
 
-    private void OnTakeDamage(DamageInfo damageInfo)
+    private void OnTakeDamage(DamageInfo damageInfo, ICombatUnit other)
     {
-        Unbind();
+        Other = other;
 
         Trigger();
-    }
 
+        if(_triggerOnce)
+            Unbind();
+    }
 }

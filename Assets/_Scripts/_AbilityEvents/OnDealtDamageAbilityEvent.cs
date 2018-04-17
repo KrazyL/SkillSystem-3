@@ -21,7 +21,7 @@
         TriggerActionList.Clear();
     }
 
-    private void OnDealtDamage(DamageInfo damageInfo)
+    private void OnDealtDamage(DamageInfo damageInfo, ICombatUnit other)
     {
         Unbind();
 

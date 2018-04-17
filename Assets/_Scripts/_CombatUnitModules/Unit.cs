@@ -16,22 +16,22 @@ public class Unit : MonoBehaviour, ICombatUnit,
 
     public Action<float> OnSpentStamina { get; set; }
 
-    public Action<DamageInfo> OnTookDamage { get; set; }
+    public Action<DamageInfo, ICombatUnit> OnTookDamage { get; set; }
     public Action<float> OnHealthGained { get; set; }
 
-    public Action OnKilledEnemy { get; set; }
-    public Action<DamageInfo> OnDealtDamage { get; set; }
+    public Action<ICombatUnit> OnKilledEnemy { get; set; }
+    public Action<DamageInfo, ICombatUnit> OnDealtDamage { get; set; }
 
-    void FireOnTookDamage(DamageInfo damageInfo)
+    void FireOnTookDamage(DamageInfo damageInfo, ICombatUnit other)
     {
         if (OnTookDamage != null)
-            OnTookDamage(damageInfo);
+            OnTookDamage(damageInfo, other);
     }
 
-    void FireOnDealtDamage(DamageInfo damageInfo)
+    void FireOnDealtDamage(DamageInfo damageInfo, ICombatUnit other)
     {
         if (OnDealtDamage != null)
-            OnDealtDamage(damageInfo);
+            OnDealtDamage(damageInfo, other);
     }
 
     private void Awake()
@@ -41,6 +41,8 @@ public class Unit : MonoBehaviour, ICombatUnit,
         StateDecorators = new List<CombatUnitStateDecoratorBase>();
 
         Flags = GetComponents<CombatUnitFlagBase>().ToList();
+
+        CastPassiveAbilities();
     }
 
     protected virtual void InitInteractables()
@@ -48,8 +50,13 @@ public class Unit : MonoBehaviour, ICombatUnit,
 
     }
 
+    protected virtual void CastPassiveAbilities()
+    {
+
+    }
+
     #region IHealthOwner
-    public DamageInfo TakeDamage(DamageInfo damageInfo)
+    public DamageInfo TakeDamage(DamageInfo damageInfo, ICombatUnit other)
     {
         damageInfo = ((ITakeDamageDecorator)this).Decorate(damageInfo);
 
@@ -60,7 +67,7 @@ public class Unit : MonoBehaviour, ICombatUnit,
 
         Debug.Log("<color=red>" + gameObject.name + " Took Damage: " + damageInfo.Damage + " Cur Health: " + Health.CurValue + "</color>");
 
-        FireOnTookDamage(damageInfo);
+        FireOnTookDamage(damageInfo, other);
 
         return damageInfo;
     }
@@ -74,16 +81,16 @@ public class Unit : MonoBehaviour, ICombatUnit,
     #endregion
 
     #region IDamageDealer
-    public DamageInfo DealDamage(DamageInfo damageInfo)
+    public DamageInfo DealDamage(DamageInfo damageInfo, ICombatUnit other)
     {
         damageInfo = ((IDealDamageDecorator)this).Decorate(damageInfo);
 
         return damageInfo;
     }
 
-    public void DealtDamage(DamageInfo damageInfo)
+    public void DealtDamage(DamageInfo damageInfo, ICombatUnit other)
     {
-        FireOnDealtDamage(damageInfo);
+        FireOnDealtDamage(damageInfo, other);
     }
     #endregion
 

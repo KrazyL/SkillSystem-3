@@ -2,7 +2,7 @@
 {
     None,
     Physical,
-
+    Poison,
 }
 
 public struct DamageInfo
@@ -39,14 +39,14 @@ public class AbilityDamageAction : AbilityActionBase
 
     void DealDamageToTarget(ICombatUnit combatUnit)
     {
-        DamageInfo decoratedDamageInfo = ((IDamageDealerCombatUnit)Caster).DealDamage(DamageInfo);
+        DamageInfo decoratedDamageInfo = ((IDamageDealerCombatUnit)Caster).DealDamage(DamageInfo, combatUnit);
 
-        DamageInfo dealtDamageInfo = ((IHealthOwnerCombatUnit)combatUnit).TakeDamage(decoratedDamageInfo);
+        DamageInfo dealtDamageInfo = ((IHealthOwnerCombatUnit)combatUnit).TakeDamage(decoratedDamageInfo, Caster);
 
         if (dealtDamageInfo.Damage == 0)
             return;
 
-        ((IDamageDealerCombatUnit)Caster).DealtDamage(dealtDamageInfo);
+        ((IDamageDealerCombatUnit)Caster).DealtDamage(dealtDamageInfo, combatUnit);
 
         FireOnActionEnded();
     }

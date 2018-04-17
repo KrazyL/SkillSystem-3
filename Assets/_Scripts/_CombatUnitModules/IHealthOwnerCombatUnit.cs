@@ -2,9 +2,9 @@
 
 public interface IHealthOwnerCombatUnit
 {
-    Action<DamageInfo> OnTookDamage { get; set; }
+    Action<DamageInfo, ICombatUnit> OnTookDamage { get; set; }
     Action<float> OnHealthGained { get; set; }
 
-    DamageInfo TakeDamage(DamageInfo damageInfo);
+    DamageInfo TakeDamage(DamageInfo damageInfo, ICombatUnit other);
     void Heal(float amount);
 }
